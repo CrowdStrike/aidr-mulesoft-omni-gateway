@@ -1,0 +1,43 @@
+apiVersion: gateway.mulesoft.com.v1alpha1
+kind: Extension
+metadata:
+  name: crowdstrike-aidr
+  labels:
+    title: CrowdStrike AIDR
+    description: Inspects LLM and MCP traffic with CrowdStrike AI Detection & Response, blocking prompt injection, PII leakage, and malicious tool calls.
+    category: Security
+spec:
+  extends:
+    - name: extension-definition
+  properties:
+    aidr_api_base_url:
+      type: string
+      format: service
+      default: "https://api.crowdstrike.com/aidr/aiguard"
+    aidr_api_key:
+      type: string
+      "@context":
+        "@characteristics":
+          - "security:sensitive"
+    llm_provider:
+      type: string
+    app_id:
+      type: string
+    user_id:
+      type: string
+    model:
+      type: string
+    model_version:
+      type: string
+    source_location:
+      type: string
+    tenant_id:
+      type: string
+    collector_instance_id:
+      type: string
+    fail_open:
+      type: boolean
+      default: false
+  required:
+    - aidr_api_base_url
+    - aidr_api_key

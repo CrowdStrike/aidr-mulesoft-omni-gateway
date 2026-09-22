@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-wasip1
+          # Pin to the minimum version declared in Cargo.toml
+          toolchain: "1.88.0"
+
+      - name: Cache Cargo registry and build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
+      - name: Run tests
+        run: cargo test
+
+      - name: Build WASM binary
+        run: cargo build --release --target wasm32-wasip1
+
+  generated-files-drift:
+    name: Generated file drift check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-wasip1
+          toolchain: "1.88.0"
+
+      - name: Install cargo-anypoint
+        run: cargo install cargo-anypoint@$(grep CARGO_ANYPOINT_VERSION Makefile | head -1 | cut -d= -f2)
+
+      - name: Regenerate asset files
+        run: cargo anypoint build-asset-files
+
+      - name: Fail if generated files differ from committed versions
+        run: |
+          if ! git diff --quiet src/generated/; then
+            echo "Generated files in src/generated/ are out of sync with definition/gcl.yaml."
+            echo "Run 'make build-asset-files' locally and commit the result."
+            git diff src/generated/
+            exit 1
+          fi

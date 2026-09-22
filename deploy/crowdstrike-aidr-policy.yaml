@@ -1,0 +1,57 @@
+# CrowdStrike AIDR policy Extension definition for self-managed Omni Gateway (local mode).
+#
+# Deploy steps:
+#   1. Copy the WASM binary to the gateway host:
+#        sudo cp crowdstrike_aidr.wasm /etc/mulesoft/flex-gateway/wasm/
+#   2. Copy this file to the gateway config:
+#        sudo cp crowdstrike-aidr-policy.yaml /etc/mulesoft/flex-gateway/conf.d/policies/
+#   3. Copy and edit crowdstrike-aidr-binding.yaml with your API instance name and AIDR token.
+#   4. Restart the gateway (Linux service):
+#        sudo systemctl restart flex-gateway
+#
+# For Docker, mount these files individually — do NOT mount the entire conf.d/ or
+# wasm/ directory, as that hides Omni Gateway's built-in definitions.
+
+---
+apiVersion: gateway.mulesoft.com/v1alpha1
+kind: Extension
+metadata:
+  name: crowdstrike-aidr
+  namespace: local
+spec:
+  extends:
+    - name: extension-definition
+      namespace: default
+    - name: envoy-filter
+      namespace: default
+    - name: proxy-wasm-filter
+      namespace: default
+  properties:
+    rootId:
+      type: string
+      default: main
+    implementation:
+      type: string
+      default: file:///etc/mulesoft/flex-gateway/wasm/crowdstrike_aidr.wasm
+    aidr_api_base_url:
+      type: string
+      format: uri
+      default: "https://api.crowdstrike.com/aidr/aiguard"
+    aidr_api_key:
+      type: string
+    llm_provider:
+      type: string
+    app_id:
+      type: string
+    user_id:
+      type: string
+    model:
+      type: string
+    model_version:
+      type: string
+    source_location:
+      type: string
+    tenant_id:
+      type: string
+    collector_instance_id:
+      type: string

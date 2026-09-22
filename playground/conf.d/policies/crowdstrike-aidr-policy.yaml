@@ -1,0 +1,47 @@
+# CrowdStrike AIDR policy Extension definition.
+# Declares the WASM binary path and config schema for local-mode Omni Gateway.
+# The wasm file is mounted at /etc/mulesoft/flex-gateway/wasm/ inside the container.
+
+---
+apiVersion: gateway.mulesoft.com/v1alpha1
+kind: Extension
+metadata:
+  name: crowdstrike-aidr
+  namespace: local
+spec:
+  extends:
+    - name: extension-definition
+      namespace: default
+    - name: envoy-filter
+      namespace: default
+    - name: proxy-wasm-filter
+      namespace: default
+  properties:
+    rootId:
+      type: string
+      default: main
+    implementation:
+      type: string
+      default: file:///etc/mulesoft/flex-gateway/wasm/crowdstrike_aidr.wasm
+    aidr_api_base_url:
+      type: string
+      format: uri
+      default: "https://api.crowdstrike.com/aidr/aiguard"
+    aidr_api_key:
+      type: string
+    llm_provider:
+      type: string
+    app_id:
+      type: string
+    user_id:
+      type: string
+    model:
+      type: string
+    model_version:
+      type: string
+    source_location:
+      type: string
+    tenant_id:
+      type: string
+    collector_instance_id:
+      type: string

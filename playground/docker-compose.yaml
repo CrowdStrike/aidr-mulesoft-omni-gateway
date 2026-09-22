@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  flex-gateway:
+    image: mulesoft/flex-gateway:1.12.0
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./conf.d/registration.yaml:/etc/mulesoft/flex-gateway/conf.d/registration.yaml:ro
+      - ./conf.d/api.yaml:/etc/mulesoft/flex-gateway/conf.d/api.yaml:ro
+      - ./conf.d/binding.yaml:/etc/mulesoft/flex-gateway/conf.d/binding.yaml:ro
+      - ./conf.d/policies/crowdstrike-aidr-policy.yaml:/etc/mulesoft/flex-gateway/conf.d/policies/crowdstrike-aidr-policy.yaml:ro
+      - ./wasm/crowdstrike_aidr.wasm:/etc/mulesoft/flex-gateway/wasm/crowdstrike_aidr.wasm:ro
+    environment:
+      FLEX_LOG_LEVEL: ${LOG_LEVEL:-debug}
+    restart: unless-stopped

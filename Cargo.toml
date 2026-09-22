@@ -1,0 +1,22 @@
+[package]
+name = "crowdstrike-aidr"
+version = "1.0.0"
+rust-version = "1.88.0"
+edition = "2021"
+resolver = "2"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+pdk = { version = "1.10.0", default-features = false, features = ["enable_stop_iteration"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+anyhow = "1"
+
+[dev-dependencies]
+pdk-unit = { version = "1.10.0", features = ["enable_stop_iteration"] }
+
+[package.metadata.anypoint]
+# Replace with your Anypoint Platform organization ID (visible in Anypoint Platform → Access Management → Organization)
+group_id = "YOUR_ANYPOINT_ORG_ID"

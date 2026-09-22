@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "crowdstrike-aidr",
+  "title": "CrowdStrike AIDR",
+  "type": "object",
+  "description": "Inspects LLM and MCP traffic with CrowdStrike AI Detection & Response, blocking prompt injection, PII leakage, and malicious tool calls.",
+  "@context": {
+    "@vocab": "anypoint://vocabulary/policy.yaml#",
+    "security": "anypoint://vocabulary/policy.yaml#"
+  },
+  "properties": {
+    "aidr_api_base_url": {
+      "title": "AIDR API Base URL",
+      "description": "Base URL of the CrowdStrike AIDR API.",
+      "type": "string",
+      "default": "https://api.crowdstrike.com/aidr/aiguard"
+    },
+    "aidr_api_key": {
+      "title": "AIDR API Key",
+      "description": "Bearer token for authenticating to the AIDR API.",
+      "type": "string",
+      "@context": {
+        "@characteristics": ["security:sensitive"]
+      }
+    },
+    "llm_provider": {
+      "title": "LLM Provider",
+      "description": "LLM provider name: openai, anthropic, azureai, gemini, cohere, bedrock.",
+      "type": "string"
+    },
+    "app_id": {
+      "title": "Application ID",
+      "description": "Identifier for the application sending requests.",
+      "type": "string"
+    },
+    "user_id": {
+      "title": "User ID",
+      "description": "Identifier for the end user.",
+      "type": "string"
+    },
+    "model": {
+      "title": "Model",
+      "description": "LLM model name (e.g. gpt-4o).",
+      "type": "string"
+    },
+    "model_version": {
+      "title": "Model Version",
+      "description": "Version of the LLM model.",
+      "type": "string"
+    },
+    "source_location": {
+      "title": "Source Location",
+      "description": "Geographic or logical source location.",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant ID",
+      "description": "Tenant identifier for multi-tenant deployments.",
+      "type": "string"
+    },
+    "collector_instance_id": {
+      "title": "Collector Instance ID",
+      "description": "Identifier for the AIDR collector instance.",
+      "type": "string"
+    },
+    "fail_open": {
+      "title": "Fail Open",
+      "description": "When true, pass traffic through if the AIDR service is unreachable instead of returning 500. Default: false (fail-closed).",
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": ["aidr_api_base_url", "aidr_api_key"],
+  "unevaluatedProperties": false
+}
