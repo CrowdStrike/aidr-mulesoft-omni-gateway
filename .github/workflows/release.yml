@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    name: Build and publish release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-wasip1
+          toolchain: "1.88.0"
+
+      - name: Cache Cargo registry and build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-release-${{ hashFiles('**/Cargo.toml') }}
+          restore-keys: ${{ runner.os }}-cargo-release-
+
+      - name: Run tests
+        run: cargo test
+
+      - name: Build WASM binary
+        run: cargo build --release --target wasm32-wasip1
+
+      - name: Rename binary with version tag
+        run: |
+          TAG="${{ github.ref_name }}"
+          cp target/wasm32-wasip1/release/crowdstrike_aidr.wasm \
+             "crowdstrike_aidr_${TAG}.wasm"
+
+      - name: Create GitHub release and upload binary
+        uses: softprops/action-gh-release@v2
+        with:
+          files: "crowdstrike_aidr_${{ github.ref_name }}.wasm"
+          generate_release_notes: true

@@ -1,0 +1,23 @@
+# PolicyBinding: applies the CrowdStrike AIDR policy to the local test API instance.
+#
+# Fill in your AIDR API key before deploying.
+# The deploy.sh script will prompt for it, or you can edit this file directly.
+
+---
+apiVersion: gateway.mulesoft.com/v1alpha1
+kind: PolicyBinding
+metadata:
+  name: crowdstrike-aidr-binding
+  namespace: local
+spec:
+  targetRef:
+    kind: ApiInstance
+    name: crowdstrike-aidr-test
+    namespace: local
+  policyRef:
+    name: crowdstrike-aidr
+  config:
+    aidr_api_base_url: "https://api.crowdstrike.com/aidr/aiguard"
+    aidr_api_key: "REPLACE_WITH_YOUR_AIDR_TOKEN"
+    llm_provider: "openai"
+    app_id: "aidr-mulesoft-test"

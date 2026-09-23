@@ -1,0 +1,11 @@
+#%Policy Definition 0.1
+name: CrowdStrike AIDR
+description: Inspects LLM and MCP traffic with CrowdStrike AI Detection & Response, blocking prompt injection, PII leakage, and malicious tool calls.
+category: Security
+providedCharacteristics: []
+requiredCharacteristics: []
+interfaceScope:
+  - api
+interfaceTransformation: []
+encryptionSupported: false
+violationCategory: security

@@ -1,0 +1,34 @@
+# PolicyBinding: applies the CrowdStrike AIDR WASM policy to an API instance
+# managed by the Anypoint control plane (connected mode / local mode).
+#
+# How to find your namespace and API instance name:
+#   Connected mode: visible in API Manager UI, or via:
+#     flexctl get apiinstances -n <namespace>
+#   Local mode: check gateway logs on startup:
+#     sudo journalctl -u flex-gateway | grep "ApiInstance"
+#
+# Steps:
+#   1. Replace <YOUR_NAMESPACE> with your Omni Gateway namespace (a UUID).
+#   2. Replace <YOUR_API_INSTANCE_NAME> with your API instance name (e.g. apii-12345678-my-api).
+#   3. Replace REPLACE_WITH_YOUR_AIDR_TOKEN with your CrowdStrike AIDR Bearer token.
+#   4. Apply: kubectl apply -f crowdstrike-aidr-binding.yaml  (connected mode)
+#             or copy to /etc/mulesoft/flex-gateway/conf.d/   (local mode)
+
+---
+apiVersion: gateway.mulesoft.com/v1alpha1
+kind: PolicyBinding
+metadata:
+  name: crowdstrike-aidr-binding
+  namespace: <YOUR_NAMESPACE>
+spec:
+  targetRef:
+    kind: ApiInstance
+    name: <YOUR_API_INSTANCE_NAME>
+    namespace: <YOUR_NAMESPACE>
+  policyRef:
+    name: crowdstrike-aidr
+  config:
+    aidr_api_base_url: "https://api.crowdstrike.com/aidr/aiguard"
+    aidr_api_key: "REPLACE_WITH_YOUR_AIDR_TOKEN"
+    llm_provider: "openai"
+    app_id: "my-app-id"

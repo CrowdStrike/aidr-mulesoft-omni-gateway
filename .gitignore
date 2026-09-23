@@ -1,0 +1,15 @@
+# Build artifacts
+target/
+definition/target/
+
+# Gateway registration credentials (device-specific, must not be committed)
+playground/conf.d/registration.yaml
+
+# Compiled WASM binary (build artifact — run `make build` to regenerate)
+playground/wasm/*.wasm
+
+# Rust
+Cargo.lock
+
+.local/
+.DS_Store

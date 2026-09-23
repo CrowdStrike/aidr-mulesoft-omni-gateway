@@ -1,0 +1,5 @@
+#%Policy Implementation 1.0
+name: CrowdStrike AIDR Omni Gateway Implementation
+technology: flexGateway
+minRuntimeVersion: 1.12.0
+releaseNotes: "Initial release. Supports LLM input/output inspection and MCP JSON-RPC 2.0 traffic for OpenAI, Anthropic, Azure OpenAI, and other providers."

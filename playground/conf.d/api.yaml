@@ -1,0 +1,31 @@
+# Test API instance for local-mode Omni Gateway.
+# Proxies port 8081 → httpbin.org/anything so we can send LLM-shaped payloads
+# through the AIDR policy and verify the (possibly redacted) body that leaves
+# the gateway.
+#
+# httpbin.org/anything echoes the full request back, so the response body shows
+# exactly what the policy forwarded upstream after any AIDR transformation.
+
+---
+apiVersion: gateway.mulesoft.com/v1alpha1
+kind: Service
+metadata:
+  name: httpbin-upstream
+  namespace: local
+spec:
+  address: https://httpbin.org
+
+---
+apiVersion: gateway.mulesoft.com/v1alpha1
+kind: ApiInstance
+metadata:
+  name: crowdstrike-aidr-test
+  namespace: local
+spec:
+  address: http://0.0.0.0:8081
+  services:
+    upstream:
+      address: https://httpbin.org
+      routes:
+        - config:
+            destinationPath: /anything
